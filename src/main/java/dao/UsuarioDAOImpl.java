@@ -1,16 +1,15 @@
 package dao;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import modelo.Usuario;
 import util.JPAUtil;
 import java.util.List;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 /**
+ * Implementación JPA del DAO de Usuario.
+ * Las operaciones de escritura relanzan la excepción para que el
+ * Servlet pueda mostrar el error al usuario (por ejemplo, correo duplicado).
  *
  * @author Maya
  */
@@ -29,7 +28,7 @@ public class UsuarioDAOImpl implements UsuarioDao {
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
-            System.err.println("Error al insertar: " + e.getMessage());
+            throw new RuntimeException("Error al insertar: " + e.getMessage(), e);
         } finally {
             em.close();
         }
@@ -42,7 +41,7 @@ public class UsuarioDAOImpl implements UsuarioDao {
     public List<Usuario> listar() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT u FROM Usuario u", Usuario.class)
+            return em.createQuery("SELECT u FROM Usuario u ORDER BY u.id", Usuario.class)
                      .getResultList();
         } finally {
             em.close();
@@ -75,7 +74,7 @@ public class UsuarioDAOImpl implements UsuarioDao {
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
-            System.err.println("Error al actualizar: " + e.getMessage());
+            throw new RuntimeException("Error al actualizar: " + e.getMessage(), e);
         } finally {
             em.close();
         }
@@ -97,7 +96,7 @@ public class UsuarioDAOImpl implements UsuarioDao {
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
-            System.err.println("Error al eliminar: " + e.getMessage());
+            throw new RuntimeException("Error al eliminar: " + e.getMessage(), e);
         } finally {
             em.close();
         }

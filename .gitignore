@@ -1,0 +1,6 @@
+target/
+nbproject/private/
+nbbuild/
+dist/
+nb-configuration.xml
+*.log
